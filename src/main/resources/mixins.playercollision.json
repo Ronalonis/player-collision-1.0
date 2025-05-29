@@ -2,7 +2,7 @@
   "required": true,
   "package": "com.ronalonis.playercollision.mixin",
   "compatibilityLevel": "JAVA_17",
-  "refmap": "mixins.yourmodid.refmap.json",
+  "refmap": "mixins.playercollision.refmap.json",
   "mixins": ["EntityMixin"],
   "client": [],
   "server": [],

@@ -149,8 +149,8 @@ dependencies {
 }
 
 mixin {
-    add sourceSets.main, 'mixins.collisionmod.refmap.json'
-    config 'mixins.collisionmod.json'
+    add sourceSets.main, 'mixins.playercollision.refmap.json'
+    config 'mixins.playercollision.json'
     debug.verbose = true
 }
 

@@ -16,7 +16,7 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber
 public class EventHandlers {
     private static final ResourceLocation COLLISION_CAP_ID =
-            new ResourceLocation("collisionmod", "player_collision");
+            new ResourceLocation("playercollision", "player_collision");
 
     @SubscribeEvent
     public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
@@ -33,8 +33,11 @@ public class EventHandlers {
     @SubscribeEvent
     public static void onPlayerClone(PlayerEvent.Clone event) {
         if (event.isWasDeath()) {
-            event.getOriginal().getCapability(PlayerCollisionProvider.CAPABILITY).ifPresent(oldCap -> {
-                event.getPlayer().getCapability(PlayerCollisionProvider.CAPABILITY).ifPresent(newCap -> {
+            Player originalPlayer = event.getOriginal();
+            Player newPlayer = event.getEntity();
+
+            originalPlayer.getCapability(PlayerCollisionProvider.CAPABILITY).ifPresent(oldCap -> {
+                newPlayer.getCapability(PlayerCollisionProvider.CAPABILITY).ifPresent(newCap -> {
                     newCap.setCollisionEnabled(oldCap.isCollisionEnabled());
                 });
             });
