@@ -13,39 +13,40 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber
 public class EventHandlers {
     private static final ResourceLocation COLLISION_CAP_ID =
             new ResourceLocation("playercollision", "player_collision");
 
+    // Убрано @EventBusSubscriber, регистрируем вручную
+
     @SubscribeEvent
-    public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
+    public void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof Player) {
             event.addCapability(COLLISION_CAP_ID, new PlayerCollisionProvider());
         }
     }
 
-    @SubscribeEvent
     public static void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
         event.register(PlayerCollision.class);
     }
 
     @SubscribeEvent
-    public static void onPlayerClone(PlayerEvent.Clone event) {
-        if (event.isWasDeath()) {
-            Player originalPlayer = event.getOriginal();
-            Player newPlayer = event.getEntity();
+    public void onPlayerClone(PlayerEvent.Clone event) {
+        Player original = event.getOriginal();
+        Player newPlayer = event.getEntity();
 
-            originalPlayer.getCapability(PlayerCollisionProvider.CAPABILITY).ifPresent(oldCap -> {
-                newPlayer.getCapability(PlayerCollisionProvider.CAPABILITY).ifPresent(newCap -> {
-                    newCap.setCollisionEnabled(oldCap.isCollisionEnabled());
-                });
+        // Всегда копируем состояние, не только при смерти
+        original.reviveCaps();
+        original.getCapability(PlayerCollisionProvider.CAPABILITY).ifPresent(oldCap -> {
+            newPlayer.getCapability(PlayerCollisionProvider.CAPABILITY).ifPresent(newCap -> {
+                newCap.setCollisionEnabled(oldCap.isCollisionEnabled());
             });
-        }
+        });
+        original.invalidateCaps();
     }
 
     @SubscribeEvent
-    public static void onRegisterCommands(RegisterCommandsEvent event) {
+    public void onRegisterCommands(RegisterCommandsEvent event) {
         CollisionCommand.register(event.getDispatcher());
     }
 }

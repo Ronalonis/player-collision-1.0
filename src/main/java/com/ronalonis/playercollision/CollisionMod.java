@@ -11,7 +11,8 @@ public class CollisionMod {
 
     public CollisionMod() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        MinecraftForge.EVENT_BUS.register(EventHandlers.class);
+        MinecraftForge.EVENT_BUS.register(new EventHandlers());
+        modEventBus.addListener(EventHandlers::onRegisterCapabilities);
     }
 }
 

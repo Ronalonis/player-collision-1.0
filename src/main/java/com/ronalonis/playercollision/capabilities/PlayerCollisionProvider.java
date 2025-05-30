@@ -32,6 +32,8 @@ public class PlayerCollisionProvider implements ICapabilityProvider, INBTSeriali
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        instance.setCollisionEnabled(nbt.getBoolean("collisionEnabled"));
+        if (nbt.contains("collisionEnabled")) {
+            instance.setCollisionEnabled(nbt.getBoolean("collisionEnabled"));
+        }
     }
 }
